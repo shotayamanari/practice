@@ -1,0 +1,74 @@
+{% load custom_tag %}
+
+<!DOCTYPE html>
+<html lang="ja">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+        <title>多対多の検索について</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    </head>
+    
+    <body>
+        <main class="container">
+            <h2>検索欄</h2>
+
+            <from action="" method="get">
+                <div>
+                    {% for tag in tags %}
+                    <label><input type="checkbox" name="tag" value="{{ tag.id }}" 
+                        {% tag_checked request tag.id %}
+                        >:{{ tag.name }}</label>
+                    {% endfor %}
+                </div>
+
+                <div class="input-group">
+                    <input class="form-control" type="text" name="search" placeholder="作品名を入力">
+                    <div class="input-group-append">
+                        <input class="form-control btn btn-outline-primary" type="submit" value="検索">
+                    </div>
+                </div>
+            </from>
+
+
+            <h2>投稿フォーム</h2>
+
+            <form method="POST">
+                {% csrf_token %}
+                <input type="text" name="title" placeholder="タイトル">
+
+                <div>
+                    {% for tag in tags %}
+                    <label><input type="checkbox" name="tag" value="{{ tag.id }}">:{{ tag.name }}</label>
+                    {% endfor %}
+                </div>
+
+                <textarea class="form-control" name="comment" placeholder="コメント"></textarea>
+                <input type="submit" value="送信">
+            </form>
+
+
+            {% for topic in topics %}
+            <div class="border">
+
+                <h2>{{ topic.title }}</h2>
+
+                <div>タグ：{% for tag in topic.tag.all %}{{ tag }} {% endfor %}</div>
+                <div>{{ topic.dt }}</div>
+
+                <div>投稿者：{{ topic.user }}</div>
+                <div>{{ topic.comment|linebreaksbr }}</div>
+
+                <h2>タグ追加</h2>
+                {% for tag in tags %}
+                <form action="{% url 'search:tag' topic.id %}" method="POST" style="display: inline-block;">
+                    {% csrf_token %}
+                    <input type="hidden" name="tag" value="{{ tag.id }}">
+                    <input type="submit" value="{{ tag.name }}">
+                </form>
+                {% endfor %}
+            </div>
+            {% endfor %}
+        </main>
+    </body>
+</html>
