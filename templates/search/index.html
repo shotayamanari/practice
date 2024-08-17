@@ -13,7 +13,7 @@
         <main class="container">
             <h2>検索欄</h2>
 
-            <from action="" method="get">
+            <form action="" method="get">
                 <div>
                     {% for tag in tags %}
                     <label><input type="checkbox" name="tag" value="{{ tag.id }}" 
@@ -28,7 +28,7 @@
                         <input class="form-control btn btn-outline-primary" type="submit" value="検索">
                     </div>
                 </div>
-            </from>
+            </form>
 
 
             <h2>投稿フォーム</h2>
